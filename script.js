@@ -7,7 +7,7 @@ const modalBackground = document.getElementById("modal-background");
 
 // variables
 let userText = "";
-let errorCount = 0;
+let errorCount = [];
 let startTime;
 let questionText = "";
 
@@ -46,6 +46,7 @@ const typeController = (e) => {
     display.innerHTML += `<span class="green">${newLetter === " " ? "▪" : newLetter}</span>`;
   } else {
     display.innerHTML += `<span class="red">${newLetter === " " ? "▪" : newLetter}</span>`;
+    errorCount.push(newLetter)
   }
 
   // check if given question text is equal to user typed text
@@ -78,18 +79,18 @@ const gameOver = () => {
   // make it inactive
   display.classList.add("inactive");
   // show result
-  resultModal.innerHTML += `
+  resultModal.innerHTML = `
     <h1>Finished!</h1>
     <p>You took: <span class="bold">${timeTaken}</span> seconds</p>
-    <p>You made <span class="bold red">${errorCount}</span> mistakes</p>
+    <p>You made <span class="bold red">${errorCount.length}</span> mistakes</p>
     <button onclick="closeModal()">Close</button>
   `;
 
-  addHistory(questionText, timeTaken, errorCount);
+  addHistory(questionText, timeTaken, errorCount.length);
 
   // restart everything
   startTime = null;
-  errorCount = 0;
+  errorCount.length = 0;
   userText = "";
   display.classList.add("inactive");
 };
@@ -110,10 +111,10 @@ const start = () => {
     countdownOverlay.innerHTML = `<h1>${count}</h1>`;
    
     // finished timer
-    if ( count === 0) {
+    if (count == 0 ) {
       // -------------- START TYPING -----------------
       document.addEventListener("keydown", typeController);
-      countdownOverlay.style.display = "flex";
+      countdownOverlay.style.display = "none";
       display.classList.remove("inactive");
 
       clearInterval(startCountdown);
